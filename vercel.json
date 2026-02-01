@@ -1,0 +1,15 @@
+{
+  "buildCommand": "yarn build",
+  "devCommand": "yarn dev",
+  "installCommand": "yarn install",
+  "framework": "nextjs",
+  "projectSettings": {
+    "rootDirectory": ".",
+    "nodeVersion": "22.x"
+  },
+  "env": {
+    "NEXTAUTH_SECRET": "@NEXTAUTH_SECRET",
+    "NEXTAUTH_URL": "@NEXTAUTH_URL",
+    "DATABASE_URL": "@DATABASE_URL"
+  }
+}
