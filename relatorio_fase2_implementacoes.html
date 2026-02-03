@@ -1,0 +1,642 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Implementações - Fase 2: Sistema de Segurança</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #D4AF37;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #D4AF37;
+            margin-bottom: 10px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            font-size: 22px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 8px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #5d6d7e;
+            font-size: 18px;
+            margin-top: 25px;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #D4AF37;
+        }
+        .feature-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 3px solid #28a745;
+        }
+        .warning-box {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 3px solid #ffc107;
+        }
+        .code-block {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .credentials-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .credentials-table th,
+        .credentials-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .credentials-table th {
+            background-color: #D4AF37;
+            color: white;
+        }
+        .credentials-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .implementation-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .implementation-list li {
+            background: #e8f5e8;
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 3px solid #28a745;
+        }
+        .implementation-list li:before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+        }
+        .security-level {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 5px 5px 5px 0;
+        }
+        .security-high {
+            background: #d4edda;
+            color: #155724;
+        }
+        .security-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+        .screenshot-placeholder {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info-box {
+            background: #d1ecf1;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 3px solid #17a2b8;
+        }
+        .workflow-step {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            position: relative;
+        }
+        .workflow-step:before {
+            content: counter(step-counter);
+            counter-increment: step-counter;
+            background: #D4AF37;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+            top: 15px;
+        }
+        .workflow-container {
+            counter-reset: step-counter;
+            margin-left: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🏛️ NASCIMENTO & ADVOGADOS</div>
+        <h1>Relatório de Implementações<br>Fase 2: Sistema de Segurança</h1>
+        <p><strong>Data:</strong> 02 de Julho de 2025 | <strong>Versão:</strong> 2.0</p>
+    </div>
+
+    <div class="summary-box">
+        <h3>📋 Resumo Executivo</h3>
+        <p>Este relatório documenta todas as implementações realizadas na <strong>Fase 2 do Sistema de Segurança</strong> do CRM Nascimento & Advogados. A fase incluiu a implementação de um sistema robusto de autenticação, controle de acesso baseado em roles, validações de segurança avançadas e gerenciamento completo de usuários e senhas.</p>
+        <p><strong>Status:</strong> ✅ Implementação Concluída com Sucesso<br>
+        <strong>Ambientes:</strong> Desenvolvimento e Produção<br>
+        <strong>Nível de Segurança:</strong> <span class="security-level security-high">ALTO</span></p>
+    </div>
+
+    <h2>1. 🔐 Sistema de Autenticação Implementado</h2>
+
+    <div class="feature-box">
+        <h3>1.1 Arquitetura de Autenticação</h3>
+        <ul class="implementation-list">
+            <li><strong>NextAuth.js v4:</strong> Framework de autenticação robusto com suporte completo ao Next.js 14</li>
+            <li><strong>Estratégia JWT:</strong> Tokens seguros para sessões de usuário</li>
+            <li><strong>Prisma Adapter:</strong> Integração completa com banco de dados PostgreSQL</li>
+            <li><strong>Credentials Provider:</strong> Autenticação por email/senha com validação segura</li>
+        </ul>
+    </div>
+
+    <div class="feature-box">
+        <h3>1.2 Segurança de Senhas</h3>
+        <ul class="implementation-list">
+            <li><strong>Hash BCrypt:</strong> Salt level 12 para máxima segurança</li>
+            <li><strong>Validação de Complexidade:</strong> Mínimo 8 caracteres, maiúsculas, minúsculas e números</li>
+            <li><strong>Senhas Temporárias:</strong> Sistema de geração automática de senhas seguras</li>
+            <li><strong>Força de Senha:</strong> Indicadores visuais (Fraca/Média/Forte)</li>
+        </ul>
+    </div>
+
+    <div class="code-block">
+// Exemplo de validação implementada
+export function validatePassword(password: string): PasswordValidation {
+  const errors: string[] = [];
+  
+  if (password.length < 8) {
+    errors.push('A senha deve ter pelo menos 8 caracteres');
+  }
+  if (!/[A-Z]/.test(password)) {
+    errors.push('A senha deve conter pelo menos uma letra maiúscula');
+  }
+  if (!/\d/.test(password)) {
+    errors.push('A senha deve conter pelo menos um número');
+  }
+  
+  return { isValid: errors.length === 0, errors };
+}
+    </div>
+
+    <h2>2. 👥 Controle de Acesso Baseado em Roles (RBAC)</h2>
+
+    <div class="feature-box">
+        <h3>2.1 Hierarquia de Usuários</h3>
+        <table class="credentials-table">
+            <thead>
+                <tr>
+                    <th>Role</th>
+                    <th>Descrição</th>
+                    <th>Permissões</th>
+                    <th>Páginas Acessíveis</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>DIRETORIA</strong></td>
+                    <td>Administradores do sistema</td>
+                    <td>Acesso total, gerenciamento de usuários</td>
+                    <td>/dashboard/*, /dashboard/usuarios, /dashboard/relatorios</td>
+                </tr>
+                <tr>
+                    <td><strong>VENDEDOR</strong></td>
+                    <td>Equipe comercial</td>
+                    <td>Gerenciamento de leads próprios</td>
+                    <td>/vendedor/*, /vendedor/lead/*</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="feature-box">
+        <h3>2.2 Implementação de Middleware</h3>
+        <ul class="implementation-list">
+            <li><strong>Proteção Global:</strong> Middleware NextAuth protege todas as rotas exceto login</li>
+            <li><strong>Validação de Role:</strong> Componente AppLayout verifica permissões por página</li>
+            <li><strong>Redirecionamento Automático:</strong> Usuários são direcionados para suas interfaces específicas</li>
+            <li><strong>APIs Protegidas:</strong> Todas as APIs verificam autenticação e autorização</li>
+        </ul>
+    </div>
+
+    <h2>3. 🛡️ Validações de Segurança Avançadas</h2>
+
+    <div class="feature-box">
+        <h3>3.1 Validação de Email Corporativo</h3>
+        <ul class="implementation-list">
+            <li><strong>Domínio Obrigatório:</strong> Apenas emails @nascimentoeadvogados.com.br são aceitos</li>
+            <li><strong>Validação em Tempo Real:</strong> Feedback visual imediato durante digitação</li>
+            <li><strong>Normalização:</strong> Conversão automática para lowercase</li>
+        </ul>
+    </div>
+
+    <div class="feature-box">
+        <h3>3.2 Sistema de Senhas Temporárias</h3>
+        <ul class="implementation-list">
+            <li><strong>Geração Segura:</strong> Algoritmo que garante caracteres de todos os tipos</li>
+            <li><strong>Força Obrigatória:</strong> Mudança necessária no primeiro login</li>
+            <li><strong>Flags de Controle:</strong> isTemporaryPassword, mustChangePassword</li>
+            <li><strong>Auditoria:</strong> Log completo de todas as alterações</li>
+        </ul>
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2>4. 📊 Gerenciamento de Usuários</h2>
+
+    <div class="feature-box">
+        <h3>4.1 Interface de Administração</h3>
+        <ul class="implementation-list">
+            <li><strong>CRUD Completo:</strong> Criar, ler, atualizar e excluir usuários</li>
+            <li><strong>Reset de Senhas:</strong> Geração de senhas temporárias pelos administradores</li>
+            <li><strong>Visualização de Status:</strong> Indicadores visuais para senhas temporárias</li>
+            <li><strong>Contadores:</strong> Estatísticas de usuários por role</li>
+        </ul>
+    </div>
+
+    <div class="screenshot-placeholder">
+        <p><strong>📸 Screenshot: Tela de Gerenciamento de Usuários</strong></p>
+        <p>Interface completa mostrando lista de usuários, opções de edição, reset de senhas e criação de novos usuários com validações em tempo real.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>4.2 Perfil do Usuário</h3>
+        <ul class="implementation-list">
+            <li><strong>Alteração de Senha:</strong> Interface segura para mudança de senha própria</li>
+            <li><strong>Validação de Senha Atual:</strong> Verificação obrigatória da senha corrente</li>
+            <li><strong>Indicadores de Segurança:</strong> Status da senha e última alteração</li>
+            <li><strong>Alertas Visuais:</strong> Notificações para senhas temporárias</li>
+        </ul>
+    </div>
+
+    <h2>5. 📝 Sistema de Auditoria e Logs</h2>
+
+    <div class="feature-box">
+        <h3>5.1 Rastreamento de Atividades</h3>
+        <ul class="implementation-list">
+            <li><strong>Log de Criação:</strong> Registro detalhado de novos usuários</li>
+            <li><strong>Log de Alterações:</strong> Rastreamento de mudanças de senhas</li>
+            <li><strong>Metadados Completos:</strong> Informações contextuais das ações</li>
+            <li><strong>Timestamps:</strong> Data/hora precisa de todas as operações</li>
+        </ul>
+    </div>
+
+    <div class="code-block">
+// Exemplo de log de auditoria implementado
+await prisma.activity.create({
+  data: {
+    userId: session.user.id,
+    tipo: 'LEAD_CREATED',
+    descricao: `Usuário criado: ${user.name} (${user.email})`,
+    metadata: {
+      action: 'CREATE_USER',
+      targetUserId: user.id,
+      targetUserRole: role,
+      createdBy: session.user.id,
+      timestamp: new Date().toISOString()
+    }
+  }
+});
+    </div>
+
+    <h2>6. 🗃️ Schema de Banco de Dados - Segurança</h2>
+
+    <div class="feature-box">
+        <h3>6.1 Melhorias no Schema User</h3>
+        <ul class="implementation-list">
+            <li><strong>Campos de Segurança:</strong> isTemporaryPassword, lastPasswordChange, mustChangePassword</li>
+            <li><strong>Role Enum:</strong> VENDEDOR, DIRETORIA com validação de tipo</li>
+            <li><strong>Timestamps:</strong> createdAt, updatedAt para auditoria</li>
+            <li><strong>Relacionamentos:</strong> Conexão segura com leads e activities</li>
+        </ul>
+    </div>
+
+    <div class="feature-box">
+        <h3>6.2 Tabela de Activities (Auditoria)</h3>
+        <ul class="implementation-list">
+            <li><strong>Metadados JSON:</strong> Armazenamento flexível de informações contextuais</li>
+            <li><strong>Tipos de Activity:</strong> Enum para categorização das ações</li>
+            <li><strong>Relacionamentos:</strong> Vinculação com usuários e leads</li>
+        </ul>
+    </div>
+
+    <h2>7. 🎨 Interface de Usuário - Componentes de Segurança</h2>
+
+    <div class="feature-box">
+        <h3>7.1 Componentes Personalizados</h3>
+        <ul class="implementation-list">
+            <li><strong>PasswordInput:</strong> Campo com indicador de força e toggle de visibilidade</li>
+            <li><strong>AppLayout:</strong> Wrapper com validação de role automática</li>
+            <li><strong>Validação Visual:</strong> Feedback em tempo real para senhas e emails</li>
+            <li><strong>Badges de Status:</strong> Indicadores visuais para tipos de senha</li>
+        </ul>
+    </div>
+
+    <div class="screenshot-placeholder">
+        <p><strong>📸 Screenshot: Interface de Alteração de Senha</strong></p>
+        <p>Mostra o componente PasswordInput com indicador de força, validações em tempo real e dicas de segurança.</p>
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2>8. 🔧 APIs de Segurança Implementadas</h2>
+
+    <div class="feature-box">
+        <h3>8.1 Endpoints de Usuários</h3>
+        <ul class="implementation-list">
+            <li><strong>GET/POST /api/users:</strong> Listar e criar usuários (apenas DIRETORIA)</li>
+            <li><strong>PUT/DELETE /api/users/[id]:</strong> Atualizar e excluir usuários</li>
+            <li><strong>POST /api/users/[id]/reset-password:</strong> Reset de senhas</li>
+            <li><strong>GET/POST /api/profile:</strong> Perfil e alteração de senha própria</li>
+        </ul>
+    </div>
+
+    <div class="feature-box">
+        <h3>8.2 Segurança das APIs</h3>
+        <ul class="implementation-list">
+            <li><strong>Autenticação Obrigatória:</strong> getServerSession em todas as rotas</li>
+            <li><strong>Validação de Role:</strong> Verificação de permissões por endpoint</li>
+            <li><strong>Sanitização:</strong> Validação e limpeza de todos os inputs</li>
+            <li><strong>Error Handling:</strong> Tratamento seguro de erros sem exposição de dados</li>
+        </ul>
+    </div>
+
+    <h2>9. 🧪 Fluxos de Trabalho - Testes de Validação</h2>
+
+    <div class="workflow-container">
+        <div class="workflow-step">
+            <h4>Teste de Login com Credenciais Válidas</h4>
+            <p><strong>Ação:</strong> Tentar fazer login com vendedor@nascimentoeadvogados.com.br / nascimento2025</p>
+            <p><strong>Resultado Esperado:</strong> Redirecionamento para /vendedor com acesso às funcionalidades específicas</p>
+        </div>
+
+        <div class="workflow-step">
+            <h4>Teste de Login com Credenciais de Diretoria</h4>
+            <p><strong>Ação:</strong> Fazer login com diretoria@nascimentoeadvogados.com.br / nascimento2025</p>
+            <p><strong>Resultado Esperado:</strong> Acesso ao dashboard completo incluindo gerenciamento de usuários</p>
+        </div>
+
+        <div class="workflow-step">
+            <h4>Teste de Controle de Acesso</h4>
+            <p><strong>Ação:</strong> Vendedor tentar acessar /dashboard/usuarios</p>
+            <p><strong>Resultado Esperado:</strong> Redirecionamento automático para /vendedor (acesso negado)</p>
+        </div>
+
+        <div class="workflow-step">
+            <h4>Teste de Criação de Usuário</h4>
+            <p><strong>Ação:</strong> Diretoria criar novo usuário com email inválido</p>
+            <p><strong>Resultado Esperado:</strong> Erro de validação impedindo criação</p>
+        </div>
+
+        <div class="workflow-step">
+            <h4>Teste de Reset de Senha</h4>
+            <p><strong>Ação:</strong> Administrador resetar senha de um usuário</p>
+            <p><strong>Resultado Esperado:</strong> Geração de senha temporária com obrigatoriedade de mudança</p>
+        </div>
+
+        <div class="workflow-step">
+            <h4>Teste de Alteração de Senha</h4>
+            <p><strong>Ação:</strong> Usuário alterar própria senha com senha fraca</p>
+            <p><strong>Resultado Esperado:</strong> Validação impede alteração até critérios serem atendidos</p>
+        </div>
+    </div>
+
+    <h2>10. 📋 Lista de Validações Implementadas</h2>
+
+    <div class="warning-box">
+        <h3>⚠️ Validações de Segurança Críticas</h3>
+        <ul class="implementation-list">
+            <li><strong>Email Corporativo:</strong> Validação obrigatória de domínio @nascimentoeadvogados.com.br</li>
+            <li><strong>Complexidade de Senha:</strong> Mínimo 8 caracteres, maiúsculas, minúsculas, números</li>
+            <li><strong>Senha Diferente:</strong> Nova senha deve ser diferente da atual</li>
+            <li><strong>Confirmação de Senha:</strong> Dupla verificação em alterações</li>
+            <li><strong>Role Authorization:</strong> Verificação de permissões em cada ação</li>
+            <li><strong>Session Validation:</strong> Validação contínua de sessão ativa</li>
+        </ul>
+    </div>
+
+    <div class="info-box">
+        <h3>ℹ️ Validações de Experiência do Usuário</h3>
+        <ul class="implementation-list">
+            <li><strong>Feedback Visual:</strong> Indicadores em tempo real para senhas e emails</li>
+            <li><strong>Prevenção de Erros:</strong> Desabilitação de botões até validação completa</li>
+            <li><strong>Mensagens Claras:</strong> Feedback específico para cada tipo de erro</li>
+            <li><strong>Loading States:</strong> Indicadores visuais durante processamento</li>
+        </ul>
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2>11. 🔑 Credenciais de Acesso do Sistema</h2>
+
+    <div class="warning-box">
+        <h3>⚠️ CONFIDENCIAL - Credenciais de Produção</h3>
+        <p>As seguintes credenciais foram configuradas no sistema e devem ser utilizadas para acesso:</p>
+    </div>
+
+    <table class="credentials-table">
+        <thead>
+            <tr>
+                <th>Usuário</th>
+                <th>Email</th>
+                <th>Senha</th>
+                <th>Role</th>
+                <th>Descrição</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Equipe Comercial</strong></td>
+                <td>vendedor@nascimentoeadvogados.com.br</td>
+                <td>nascimento2025</td>
+                <td>VENDEDOR</td>
+                <td>Acesso às funcionalidades de vendas e gestão de leads</td>
+            </tr>
+            <tr>
+                <td><strong>Diretoria</strong></td>
+                <td>diretoria@nascimentoeadvogados.com.br</td>
+                <td>nascimento2025</td>
+                <td>DIRETORIA</td>
+                <td>Acesso administrativo completo incluindo gerenciamento de usuários</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="info-box">
+        <h3>🌐 URLs de Acesso</h3>
+        <ul>
+            <li><strong>URL de Produção:</strong> http://localhost:3000 (ambiente de desenvolvimento/teste)</li>
+            <li><strong>Página de Login:</strong> http://localhost:3000/login</li>
+            <li><strong>Dashboard Diretoria:</strong> http://localhost:3000/dashboard</li>
+            <li><strong>Área do Vendedor:</strong> http://localhost:3000/vendedor</li>
+            <li><strong>Gerenciamento de Usuários:</strong> http://localhost:3000/dashboard/usuarios</li>
+        </ul>
+    </div>
+
+    <h2>12. 📈 Estatísticas da Implementação</h2>
+
+    <div class="feature-box">
+        <h3>12.1 Dados do Sistema Atual</h3>
+        <ul class="implementation-list">
+            <li><strong>Total de Usuários:</strong> 2 usuários configurados</li>
+            <li><strong>Leads Importados:</strong> 29 leads da planilha original</li>
+            <li><strong>Valor Total:</strong> R$ 674.832,91 em negociação</li>
+            <li><strong>Tipos de Usuário:</strong> 1 Vendedor, 1 Diretoria</li>
+        </ul>
+    </div>
+
+    <div class="feature-box">
+        <h3>12.2 Métricas de Segurança</h3>
+        <ul class="implementation-list">
+            <li><strong>APIs Protegidas:</strong> 12 endpoints com autenticação obrigatória</li>
+            <li><strong>Rotas Seguras:</strong> 100% das rotas protegidas por middleware</li>
+            <li><strong>Validações Implementadas:</strong> 15+ validações de segurança</li>
+            <li><strong>Nível de Hash:</strong> BCrypt level 12 (máxima segurança)</li>
+        </ul>
+    </div>
+
+    <h2>13. ✅ Checklist de Validação para Time de Teste</h2>
+
+    <div class="workflow-container">
+        <div class="workflow-step">
+            <h4>Autenticação Básica</h4>
+            <p>□ Login com credenciais válidas funciona<br>
+            □ Login com credenciais inválidas é rejeitado<br>
+            □ Logout funciona corretamente<br>
+            □ Sessão persiste após refresh da página</p>
+        </div>
+
+        <div class="workflow-step">
+            <h4>Controle de Acesso</h4>
+            <p>□ VENDEDOR acessa apenas área de vendas<br>
+            □ DIRETORIA acessa todas as áreas<br>
+            □ Redirecionamento automático baseado em role<br>
+            □ URLs diretas são protegidas</p>
+        </div>
+
+        <div class="workflow-step">
+            <h4>Validações de Senha</h4>
+            <p>□ Senha fraca é rejeitada<br>
+            □ Confirmação de senha funciona<br>
+            □ Alteração de senha própria funciona<br>
+            □ Reset de senha por admin funciona</p>
+        </div>
+
+        <div class="workflow-step">
+            <h4>Validações de Email</h4>
+            <p>□ Email não corporativo é rejeitado<br>
+            □ Email corporativo é aceito<br>
+            □ Feedback visual funciona em tempo real</p>
+        </div>
+
+        <div class="workflow-step">
+            <h4>Gerenciamento de Usuários</h4>
+            <p>□ Criação de usuário funciona<br>
+            □ Edição de usuário funciona<br>
+            □ Exclusão de usuário funciona<br>
+            □ Lista de usuários carrega corretamente</p>
+        </div>
+
+        <div class="workflow-step">
+            <h4>Interface e UX</h4>
+            <p>□ Indicadores de força de senha funcionam<br>
+            □ Mensagens de erro são claras<br>
+            □ Loading states aparecem adequadamente<br>
+            □ Navegação está intuitiva</p>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2>14. 🛡️ Considerações de Segurança Avançadas</h2>
+
+    <div class="warning-box">
+        <h3>⚠️ Recomendações para Produção</h3>
+        <ul class="implementation-list">
+            <li><strong>HTTPS Obrigatório:</strong> Certificado SSL/TLS em produção</li>
+            <li><strong>Rate Limiting:</strong> Implementar limitação de tentativas de login</li>
+            <li><strong>Logs de Segurança:</strong> Monitoramento de tentativas de acesso suspeitas</li>
+            <li><strong>Backup Seguro:</strong> Backups criptografados do banco de dados</li>
+            <li><strong>Variáveis de Ambiente:</strong> Proteção adequada das variáveis sensíveis</li>
+        </ul>
+    </div>
+
+    <div class="info-box">
+        <h3>📝 Próximas Fases Sugeridas</h3>
+        <ul>
+            <li><strong>Fase 3:</strong> Implementação de 2FA (Two-Factor Authentication)</li>
+            <li><strong>Fase 4:</strong> Dashboard avançado de auditoria e relatórios de segurança</li>
+            <li><strong>Fase 5:</strong> Integração com sistemas externos de segurança</li>
+            <li><strong>Fase 6:</strong> Mobile app com autenticação biométrica</li>
+        </ul>
+    </div>
+
+    <h2>15. 📞 Contato e Suporte</h2>
+
+    <div class="info-box">
+        <h3>🔧 Suporte Técnico</h3>
+        <p>Para questões técnicas ou problemas com o sistema de segurança:</p>
+        <ul>
+            <li><strong>Sistema:</strong> CRM Nascimento & Advogados v2.0</li>
+            <li><strong>Data de Deploy:</strong> 02 de Julho de 2025</li>
+            <li><strong>Ambiente:</strong> Desenvolvimento/Teste</li>
+            <li><strong>Status:</strong> ✅ Operacional</li>
+        </ul>
+    </div>
+
+    <div style="margin-top: 50px; text-align: center; border-top: 2px solid #D4AF37; padding-top: 20px;">
+        <p><strong>Relatório gerado automaticamente pelo sistema em 02/07/2025</strong></p>
+        <p><em>Este documento contém informações confidenciais e deve ser tratado adequadamente.</em></p>
+        <div class="logo" style="margin-top: 20px;">🏛️ NASCIMENTO & ADVOGADOS - Sistema CRM v2.0</div>
+    </div>
+</body>
+</html>

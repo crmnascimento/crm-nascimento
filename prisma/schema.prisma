@@ -1,0 +1,201 @@
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+    output = "/home/ubuntu/crm-security-updated/app/node_modules/.prisma/client"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String
+  role          UserRole  @default(VENDEDOR)
+  emailVerified DateTime?
+  image         String?
+  // Campos para segurança de senhas
+  isTemporaryPassword Boolean @default(false)
+  lastPasswordChange  DateTime? @default(now())
+  mustChangePassword  Boolean @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts     Account[]
+  sessions     Session[]
+  leads        Lead[]
+  interactions Interaction[]
+  reminders    Reminder[]
+  activities   Activity[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Lead {
+  id                        String    @id @default(cuid())
+  razaoSocial               String
+  nomeFantasia              String?
+  cnpj                      String?
+  setor                     String?
+  porte                     String?
+  faturamentoEstimado       String?
+  endereco                  String?
+  bairro                    String?
+  municipio                 String?
+  uf                        String?
+  cep                       String?
+  telefonePrincipal         String?
+  telefoneSecundario        String?
+  email                     String?
+  contatoPrincipal          String?
+  cargo                     String?
+  pendenciasFiscais         String?
+  valorEstimadoRecuperacao  Decimal?
+  contratosBancarios        String?
+  instituicoesFinanceiras   String?
+  status                    LeadStatus @default(NAO_CONTATADO)
+  dataPrimeiroContato       DateTime?
+  dataUltimoContato         DateTime?
+  proximaAcao               String?
+  dataProximaAcao           DateTime?
+  prioridade                Prioridade @default(MEDIA)
+  observacoes               String?   @db.Text
+  observacoesContato        String?   @db.Text
+  contratoAssinado          Boolean   @default(false)
+  dataAssinatura            DateTime?
+  valorContrato             Decimal?
+  formaPagamento            String?
+  statusProcesso            String?
+  valorRecuperado           Decimal?
+  comissaoGerada            Decimal?
+  canalContato              String?
+  responsavelId             String?
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
+
+  responsavel   User?         @relation(fields: [responsavelId], references: [id])
+  interactions  Interaction[]
+  reminders     Reminder[]
+  activities    Activity[]
+}
+
+model Interaction {
+  id          String          @id @default(cuid())
+  leadId      String
+  userId      String
+  tipo        TipoInteracao
+  descricao   String          @db.Text
+  resultado   String?
+  proximoStep String?
+  dataContato DateTime        @default(now())
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Reminder {
+  id          String    @id @default(cuid())
+  leadId      String
+  userId      String
+  titulo      String
+  descricao   String?
+  dataHora    DateTime
+  concluido   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Activity {
+  id        String       @id @default(cuid())
+  leadId    String?
+  userId    String
+  tipo      TipoActivity
+  descricao String
+  metadata  Json?
+  createdAt DateTime     @default(now())
+
+  lead Lead? @relation(fields: [leadId], references: [id])
+  user User  @relation(fields: [userId], references: [id])
+}
+
+enum UserRole {
+  VENDEDOR
+  DIRETORIA
+}
+
+enum LeadStatus {
+  NAO_CONTATADO
+  POTENCIAL
+  EM_ANALISE
+  CONTRATO_ASSINADO
+  PROCESSO_INICIADO
+  VALOR_RECUPERADO
+  PERDIDO
+}
+
+enum Prioridade {
+  BAIXA
+  MEDIA
+  ALTA
+}
+
+enum TipoInteracao {
+  LIGACAO
+  EMAIL
+  WHATSAPP
+  REUNIAO
+  PROPOSTA
+  CONTRATO
+  OBSERVACAO
+}
+
+enum TipoActivity {
+  LEAD_CREATED
+  LEAD_UPDATED
+  INTERACTION_ADDED
+  STATUS_CHANGED
+  REMINDER_CREATED
+  CONTRACT_SIGNED
+  PAYMENT_RECEIVED
+}
